@@ -41,7 +41,7 @@ const TodoList = ({todos, remove}) => {
     return (<Todo todo={todo} key={todo.id} remove={remove}/> )
   });
 
-  return (<div className="" style={{marginTop:'30px'}}>{todoNode}</div>);
+  return (<div className="" style={{marginTop:'30px'}}><ul className = "ul-noBullet">{todoNode}</ul></div>);
 }
 
 
