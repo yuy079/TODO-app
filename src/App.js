@@ -30,18 +30,35 @@ const TodoForm = ({addTodo}) => {
   );
 };
 
-const Todo = ({todo, remove}) => {
+
+const Todo = ({todo, remove, update}) => {
   // Each Todo
-  return (<li href="#" className="" onClick={() => {remove(todo.text)}}>{todo.text}</li>);
+  let input;
+  let val = todo.text;
+  return (<div>
+            < input className=""
+              ref={
+                    node => {  input = node;}
+                  }
+              value = {val}
+              onChange= {
+                () => {
+                        update(todo.text, input.value);
+                        input.value = '';
+                      }
+              }/>
+            <button onClick = {() => {remove(todo.text)}}>remove</button>
+          </div>);
+    //<li href="#" className="" onClick={() => {remove(todo.text)}}><div>{todo.text}     <button>aa</button></div>);
 }
 
-const TodoList = ({todos, remove}) => {
+const TodoList = ({todos, remove, update}) => {
   // Map through the todos
   const todoNode = todos.map((todo) => {
-    return (<Todo todo={todo} key={todo.id} remove={remove}/> )
+    return (<Todo todo={todo} remove={remove} update = {update}/>)
   });
 
-  return (<div className="" style={{marginTop:'30px'}}><ul className = "ul-noBullet">{todoNode}</ul></div>);
+  return (<div className="" style={{marginTop:'30px'}}>{todoNode}</div>);
 }
 
 
@@ -63,14 +80,29 @@ class App extends Component {
     this.setState({data: this.state.data})
   }
   // Handle remove
-  handleRemove(id){
+  handleRemove(text){
     // Filter all todos except the one to be removed
     const remainder = this.state.data.filter((todo) => {
-      if(todo.text !== id) return todo;
+      if(todo.text !== text) return todo;
     });
     // Update state with filter
     this.setState({data: remainder});
   }
+
+  handleUpdate(text, newtext){
+    // Filter all todos except the one to be removed
+    const remainder = this.state.data.filter((todo) => {
+      if(todo.text !== text) return todo;
+      else
+      {
+        todo.text = newtext;
+        return todo;
+      }
+    });
+    // Update state with filter
+    this.setState({data: remainder});
+  }
+
   render() {
     return (
       <div className="App">
@@ -84,6 +116,7 @@ class App extends Component {
           <TodoList
             todos={this.state.data}
             remove={this.handleRemove.bind(this)}
+            update={this.handleUpdate.bind(this)}
           />
         </div>
       </div>
