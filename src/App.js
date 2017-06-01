@@ -31,7 +31,7 @@ const TodoForm = ({addTodo}) => {
 };
 
 
-const Todo = ({todo, remove, update}) => {
+const Todo = ({todo, remove, update, pri}) => {
   // Each Todo
   let input;
   let val = todo.text;
@@ -44,18 +44,18 @@ const Todo = ({todo, remove, update}) => {
               onChange= {
                 () => {
                         update(todo.text, input.value);
-                        input.value = '';
                       }
               }/>
             <button onClick = {() => {remove(todo.text)}}>remove</button>
+            <button onClick = {() => {pri(todo.text)}}>prioritize</button>
           </div>);
     //<li href="#" className="" onClick={() => {remove(todo.text)}}><div>{todo.text}     <button>aa</button></div>);
 }
 
-const TodoList = ({todos, remove, update}) => {
+const TodoList = ({todos, remove, update, pri}) => {
   // Map through the todos
   const todoNode = todos.map((todo) => {
-    return (<Todo todo={todo} remove={remove} update = {update}/>)
+    return (<Todo todo={todo} remove={remove} update = {update} pri = {pri}/>)
   });
 
   return (<div className="" style={{marginTop:'30px'}}>{todoNode}</div>);
@@ -103,6 +103,24 @@ class App extends Component {
     this.setState({data: remainder});
   }
 
+  handlePri(text){
+    // Filter all todos except the one to be removed
+    const remainder =  [];
+    const remainder1 = this.state.data.filter((todo) => {
+      if(todo.text == text) remainder.push(todo);
+
+    });
+
+    const remainder2 = this.state.data.filter((todo) => {
+      if(todo.text !== text) remainder.push(todo);
+
+    });
+
+
+    // Update state with filter
+    this.setState({data: remainder});
+  }
+
   render() {
     return (
       <div className="App">
@@ -117,6 +135,7 @@ class App extends Component {
             todos={this.state.data}
             remove={this.handleRemove.bind(this)}
             update={this.handleUpdate.bind(this)}
+            pri = {this.handlePri.bind(this)}
           />
         </div>
       </div>
